@@ -17,10 +17,27 @@ function addComment(state, data) {
   };
 }
 
+function updateComment(state, id, data) {
+    const comments = { ...state.comments };
+    const commentsIds = [...state.commentsIds];
+    let comment = comments[id];
+    if (!comment) {
+      return {
+        comments, commentsIds
+      };
+    }
+    comment = Object.assign(comment,data);
+    return {
+      comments, commentsIds
+    };
+}
+
 export default (state = {}, action) => {
   switch (action.type) {
     case ADD_COMMENT:
       return addComment(state, action.data);
+    case EDIT_COMMENT:
+      return updateComment(state, action.id, action.data);
     default:
       return state;
   }

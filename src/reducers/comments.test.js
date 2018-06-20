@@ -34,4 +34,34 @@ describe('comments reducer', () => {
       ...commentData,
     });
   });
+
+  it('edit existed comment', () => {
+    const commentId = 3;
+    const updateData = {
+      id: 3,
+      client_id: 1,
+      comment: 'updated comment text',
+      type: 'info',
+    };
+    const len = initState.commentsIds.length;
+    const state = commentsReducer(initState, {type: EDIT_COMMENT, id: commentId, data: updateData});
+    const updatedComment = state.comments[commentId];
+    expect(updatedComment).not.toBeFalsy();
+    expect(updatedComment.comment).toEqual(updateData.comment);
+    expect(updatedComment.id).toEqual(commentId);
+    expect(state.commentsIds.length).toEqual(len);    
+  });
+
+  it('edit nonexistent comment', () => {
+    const commentId = 12;
+    const updateData = {
+      id: 3,
+      client_id: 1,
+      comment: 'updated comment text',
+      type: 'info',
+    };
+    const len = initState.commentsIds.length;
+    const state = commentsReducer(initState, {type: EDIT_COMMENT, id: commentId, data: updateData});            
+    expect(state).toEqual(initState);    
+  });
 });
