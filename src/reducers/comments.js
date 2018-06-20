@@ -18,18 +18,30 @@ function addComment(state, data) {
 }
 
 function updateComment(state, id, data) {
-    const comments = { ...state.comments };
-    const commentsIds = [...state.commentsIds];
-    let comment = comments[id];
-    if (!comment) {
-      return {
-        comments, commentsIds
-      };
-    }
-    comment = Object.assign(comment,data);
+  const comments = { ...state.comments };
+  const commentsIds = [...state.commentsIds];
+  if (!comments[id]) {
     return {
-      comments, commentsIds
+      comments, commentsIds,
     };
+  }
+  comments[id] = Object.assign(comments[id], data);
+  return {
+    comments, commentsIds,
+  };
+}
+
+function deleteComment(state, id) {
+  const comments = { ...state.comments };
+  const commentsIds = [...state.commentsIds];
+  if (!comments[id]) {
+    return { comments, commentsIds };
+  }
+  delete comments[id];
+  if (commentsIds.indexOf(id) >= 0) {
+    commentsIds.splice(commentsIds.indexOf(id), 1);
+  }
+  return { comments, commentsIds };
 }
 
 export default (state = {}, action) => {
@@ -38,6 +50,8 @@ export default (state = {}, action) => {
       return addComment(state, action.data);
     case EDIT_COMMENT:
       return updateComment(state, action.id, action.data);
+    case DELETE_COMMENT:
+      return deleteComment(state, action.id);
     default:
       return state;
   }

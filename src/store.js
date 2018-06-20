@@ -9,8 +9,6 @@ const middlwares = [
   routerMiddleware(history),
 ];
 
-const enhancers = [];
-
 const composedEnhancers = compose(applyMiddleware(...middlwares));
 
 const store = createStore(
