@@ -1,5 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const RegistrationPage = () => <div>props</div>;
+export default class RegistrationPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      formValid: true,
+    };
+  }
 
-export default RegistrationPage;
+  render() {
+    return <div>{this.state.formValid}</div>;
+  }
+}
