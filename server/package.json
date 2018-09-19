@@ -1,0 +1,24 @@
+{
+  "name": "test-rest-api",
+  "version": "1.0.0",
+  "description": "simple and small rest api for own react applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "api:start": "pm2 start server.js --name api-server",
+    "api:restart": "pm2 restart api-server",
+    "api:stop": "pm2 stop api-server",
+    "api:list": "pm2 list"
+  },
+  "author": "Dyatlov Andrew",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "method-override": "^3.0.0",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "pm2": "^3.1.2"
+  }
+}

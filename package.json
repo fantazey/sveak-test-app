@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "lint": "eslint . --ext '.js,.jsx'",
+        "lint:app": "./node_modules/eslint/bin/eslint.js src",
+        "lint:server": "./node_modules/eslint/bin/eslint.js server",
         "start": "webpack-dev-server --mode development",
         "test": "jest",
         "test:watch": "npm test -- --watch",
@@ -27,7 +28,6 @@
         "enzyme": "^3.3.0",
         "enzyme-adapter-react-16": "^1.1.1",
         "eslint": "^4.19.1",
-        "eslint-config-airbnb": "^16.1.0",
         "eslint-plugin-import": "^2.12.0",
         "eslint-plugin-jsx-a11y": "^6.0.3",
         "eslint-plugin-react": "^7.9.1",

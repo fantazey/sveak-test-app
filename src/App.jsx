@@ -9,22 +9,22 @@ import ClientCommentsPage from './containers/ClientCommentsPage';
 import BaseLayout from './components/BaseLayout';
 import NavigationMenu from './components/NavigationMenu';
 
-const Content = () => (
-  <div className="content">
-    <Route exact path="/" component={ClientsPage} />
-    <Route exact path="/new" components={RegistrationPage} />
-    <Route exact path="/:id" components={ClientPage} />
-    <Route exact path="/:id/comments" component={ClientCommentsPage} />
-  </div>
-);
+const Content = () =>
+    <div className='content'>
+        <Route exact path='/' component={ClientsPage} />
+        <Route exact path='/new' components={RegistrationPage} />
+        <Route exact path='/:id' components={ClientPage} />
+        <Route exact path='/:id/comments' component={ClientCommentsPage} />
+    </div>
+;
 
-const App = () => (
-  <div className="App">
-    <BaseLayout
-      navigation={<NavigationMenu />}
-      content={<Content />}
-    />
-  </div>
-);
+const App = () =>
+    <div className='App'>
+        <BaseLayout
+            navigation={<NavigationMenu />}
+            content={<Content />}
+        />
+    </div>
+;
 
-export default hot(module)(App);
+export default hot( module )( App );
