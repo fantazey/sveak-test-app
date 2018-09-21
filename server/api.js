@@ -18,6 +18,7 @@ const DEF_OFFSET = 0;
  * @typedef {Object} apiComment
  * @property {Number} id
  * @property {Number} clientId
+ * @property {Boolean} isDeleted
  * @property {String} text
  */
 
@@ -43,9 +44,13 @@ function writeFile( json ) {
     fs.writeFileSync( dbFile, JSON.stringify( json ) );
 }
 
+router.use( function( req, res, next ) {
+    req.db = readFile();
+    next();
+} );
+
 router.get( '/clients', function( req, res ) {
-    const db = readFile();
-    const clients = db.clients;
+    const clients = req.db.clients;
     const limit = +req.query.limit || DEF_LIMIT;
     const offset = +req.query.offset || DEF_OFFSET;
     const resp = clients.slice( offset, limit + offset );
@@ -60,8 +65,7 @@ router.get( '/clients', function( req, res ) {
 } );
 
 router.get( '/clients/:id', function( req, res ) {
-    const db = readFile();
-    const clients = db.clients;
+    const clients = req.db.clients;
     const client = clients.find( x => x.id === +req.params.id );
     if ( !client ) {
         return res.status( 404 ).json( { 'error': 'not found' } );
@@ -70,8 +74,7 @@ router.get( '/clients/:id', function( req, res ) {
 } );
 
 router.put( '/clients/:id', function( req, res ) {
-    const db = readFile();
-    const clients = db.clients;
+    const clients = req.db.clients;
     let client = clients.find( x => x.id === +req.params.id );
     if ( !client ) {
         return res.status( 404 ).json( { 'error': 'not found' } );
@@ -79,39 +82,76 @@ router.put( '/clients/:id', function( req, res ) {
     clients.splice( clients.indexOf( client ), 1 );
     // todo: add validation and create comment handler
     client = { ...client, ...req.body };
-    db.clients = [ ...clients, client ];
-    writeFile( db );
+    req.db.clients = [ ...clients, client ];
+    writeFile( req.db );
     res.json( { clients: [ client ] } );
 } );
 
 router.post( '/clients', function( req, res ) {
-    const db = readFile();
     // todo: add validation
     if ( !req.body.firstName || !req.body.lastName ) {
         return res.status( 400 ).json( { 'error': 'invalid form params' } );
     }
     const client = {
-        id: db.clientsLastId + 1,
+        id: req.db.clientsLastId + 1,
         ...req.body
     };
-    db.clients.push( client );
-    db.clientsLastId = client.id;
-    writeFile( db );
+    req.db.clients.push( client );
+    req.db.clientsLastId = client.id;
+    writeFile( req.db );
     return res.json( { clients: [ client ] } );
 } );
 
 router.delete( '/clients/:id', function( req, res ) {
-    // todo: find way to push db as arg
-    const db = readFile();
-    const clients = db.clients;
+    const clients = req.db.clients;
     const client = clients.find( x => x.id === +req.params.id );
     if ( !client ) {
         return res.status( 404 ).json( { 'error': 'not found' } );
     }
     clients.splice( clients.indexOf( client ), 1 );
-    db.clients = clients;
-    writeFile( db );
+    req.db.clients = clients;
+    writeFile( req.db );
     return res.json( { 'status': 'success' } );
 } );
+
+router.get( '/clients/:id/comments', function( req, res ) {
+    const comments = req.db.comments;
+    const limit = +req.query.limit || DEF_LIMIT;
+    const offset = +req.query.offset || DEF_OFFSET;
+    return res.json( {
+        comments: comments.filter(
+            x => x.clientId === +req.params.id && !x.isDeleted
+        ).slice( offset, limit + offset )
+    } );
+} );
+
+router.post( '/clients/:id/comments', function( req, res ) {
+    if ( !req.body.text || req.body.text.trim().length === 0 ) {
+        return res.status( 400 ).json( { 'error': 'empty comment' } );
+    }
+    /**@type {apiComment} */
+    const comment = {
+        id: req.db.commentsLastId + 1,
+        clientId: +req.params.id,
+        isDeleted: false,
+        text: req.body.text
+    };
+    req.db.comments.push( comment );
+    req.db.commentsLastId = comment.id;
+    writeFile( req.db );
+    return res.json( { comments: [ comment ] } );
+} );
+
+router.delete( 'comments/:id', function( req, res ) {
+    const comments = req.db.comments;
+    const comment = comments.find( x => x.id === +req.params.id );
+    if ( !comment ) {
+        res.status( 404 ).json( { 'error': 'not found' } );
+    }
+    comment.isDeleted = true;
+    writeFile( req.db );
+    return res.json( { comments: [ comment ] } );
+} );
+
 
 module.exports = router;

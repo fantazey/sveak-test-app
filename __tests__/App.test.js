@@ -1,3 +1,3 @@
-describe('render main component', () => {
+describe( 'render main component', () => {
 
-});
+} );

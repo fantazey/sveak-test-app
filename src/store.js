@@ -7,21 +7,21 @@ import { loadFromStorage, saveToStorage } from './utils/localStorage';
 export const history = createHistory();
 
 const middlwares = [
-  routerMiddleware(history),
+    routerMiddleware( history )
 ];
 
-const composedEnhancers = compose(applyMiddleware(...middlwares));
+const composedEnhancers = compose( applyMiddleware( ...middlwares ) );
 
 const initialState = loadFromStorage() || {};
 
 const store = createStore(
-  reducer,
-  initialState,
-  composedEnhancers,
+    reducer,
+    initialState,
+    composedEnhancers,
 );
 
-store.subscribe(() => {
-  saveToStorage(store.getState());
-});
+store.subscribe( () => {
+    saveToStorage( store.getState() );
+} );
 
 export default store;

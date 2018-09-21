@@ -1,11 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-const NavigationMenu = () => (
-  <div className="navigation">
-    <Link to="/" >Clients</Link>
-    <Link to="/new">Registration</Link>
-  </div>
-);
+const NAV = [
+    { path: '/auth', label: 'Log in' },
+    { path: '/', label: 'Clients list' },
+    { path: '/new', label: 'Registration' },
+    { path: '/:id/comments', label: 'Comments' }
+];
+
+const NavigationMenu = () =>
+    <ul className='nav nav-pills'>
+        {NAV.map( ( item, index ) => <li className='nav-item' key={`navigation_li-_${index}`}>
+            <NavLink
+                exact
+                key={`navigation_${index}`}
+                className='nav-item-link'
+                activeClassName='active'
+                to={item.path}>{item.label}
+            </NavLink>
+        </li> ) }
+    </ul>
+;
 
 export default NavigationMenu;
