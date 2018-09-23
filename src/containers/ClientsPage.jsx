@@ -1,35 +1,25 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import ClientTable from '../components/ClientTable';
+import { loadClients } from '../actions/clients';
 
-export default class ClientsPage extends Component {
-    constructor( props ) {
-        super( props );
-        this.state = {
-            page: 1
-        };
+class ClientsPage extends Component {
+    componentDidMount() {
+        this.props.loadClients();
     }
+
     render() {
         return (
             <div className='page-content'>
-                <div className='table-wrapper'>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Client</th>
-                                <th>Phone</th>
-                                <th>Address</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td />
-                                <td />
-                                <td />
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className='pagination'>{this.state.page}</div>
+                <ClientTable/>
             </div>
         );
     }
 }
+
+const mapDispatchToProps = dispatch => bindActionCreators( {
+    loadClients
+}, dispatch );
+
+export default connect( '', mapDispatchToProps )( ClientsPage );

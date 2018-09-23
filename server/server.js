@@ -8,6 +8,14 @@ const jsonParser = bodyParser.json();
 
 app.use( logger( 'default' ) );
 app.use( jsonParser );
+
+app.use( function( req, res, next ) {
+    res.header( 'Access-Control-Allow-Origin', '*' );
+    // res.header( 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type' );
+    // res.header( 'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS' );
+    next();
+} );
+
 app.use( '/api', apiRouter );
 
 const PORT = 8998;

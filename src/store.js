@@ -1,27 +1,25 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
+import thunk from 'redux-thunk';
 import reducer from './reducers';
-import { loadFromStorage, saveToStorage } from './utils/localStorage';
 
 export const history = createHistory();
 
 const middlwares = [
-    routerMiddleware( history )
+    routerMiddleware( history ),
+    thunk
 ];
 
 const composedEnhancers = compose( applyMiddleware( ...middlwares ) );
 
-const initialState = loadFromStorage() || {};
+const initialState = {};
 
 const store = createStore(
     reducer,
     initialState,
-    composedEnhancers,
+    composedEnhancers
 );
 
-store.subscribe( () => {
-    saveToStorage( store.getState() );
-} );
 
 export default store;
