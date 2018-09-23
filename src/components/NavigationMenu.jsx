@@ -8,18 +8,21 @@ const NAV = [
     { path: '/:id/comments', label: 'Comments' }
 ];
 
-const NavigationMenu = () =>
-    <ul className='nav nav-pills'>
-        {NAV.map( ( item, index ) => <li className='nav-item' key={`navigation_li-_${index}`}>
-            <NavLink
-                exact
-                key={`navigation_${index}`}
-                className='nav-item-link'
-                activeClassName='active'
-                to={item.path}>{item.label}
-            </NavLink>
-        </li> ) }
-    </ul>
-;
+const NavigationMenu = () => (
+    <nav className='navbar bg-light'>
+        <ul className='nav nav-pills'>
+            { NAV.map( ( item, index ) => <li className='nav-item' key={`navigation_li-_${index}`}>
+                <NavLink
+                    exact
+                    key={`navigation_${index}`}
+                    className='nav-link'
+                    activeClassName='active'
+                    to={item.path}>{item.label}
+                </NavLink>
+            </li> ) }
+        </ul>
+    </nav>
+);
+
 
 export default NavigationMenu;

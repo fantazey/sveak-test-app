@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 const BaseLayout = props =>
     <div className='container'>
-        <div className='navigation'>
-            {props.navigation}
-        </div>
+        {props.navigation}
         <div className='content-block'>
             {props.content}
         </div>

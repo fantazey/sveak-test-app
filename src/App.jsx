@@ -19,7 +19,7 @@ const Content = () =>
 ;
 
 const App = () =>
-    <div className='App'>
+    <div className='container-fluid'>
         <BaseLayout
             navigation={<NavigationMenu />}
             content={<Content />}
