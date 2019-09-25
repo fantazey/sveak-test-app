@@ -12,9 +12,9 @@ import NavigationMenu from './components/NavigationMenu';
 const Content = () =>
     <div className='content'>
         <Route exact path='/' component={ClientsPage} />
-        <Route exact path='/new' components={RegistrationPage} />
-        <Route exact path='/:id' components={ClientPage} />
-        <Route exact path='/:id/comments' component={ClientCommentsPage} />
+        <Route exact path='/new' component={RegistrationPage} />
+        <Route exact path='/user/:id/info' component={ClientPage} />
+        <Route exact path='/user/:id/comments' component={ClientCommentsPage} />
     </div>
 ;
 

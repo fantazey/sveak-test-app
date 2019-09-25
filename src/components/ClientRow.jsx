@@ -15,7 +15,7 @@ class ClientRow extends Component {
 
     viewClick( e ) {
         e.preventDefault();
-        this.props.changePage( `/${this.client.id}/` );
+        this.props.changePage( `user/${this.client.id}/info` );
     }
 
     deleteClick( e ) {
@@ -25,7 +25,7 @@ class ClientRow extends Component {
 
     commentsClick( e ) {
         e.preventDefault();
-        this.props.changePage( `/${this.client.id}/comments` );
+        this.props.changePage( `user/${this.client.id}/comments` );
     }
 
     render() {

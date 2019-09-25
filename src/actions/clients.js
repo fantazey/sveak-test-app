@@ -2,7 +2,7 @@ import { LOAD, LOAD_CLIENT, ADD, DELETE, EDIT } from '../reducers/clients';
 import { API_PATH } from '../confg';
 
 
-export const loadClients = ( limit, offset ) => {
+export const loadClients = ( limit = 10, offset = 0 ) => {
     return dispatch => {
         const url = `${API_PATH}/clients?limit=${limit}&offset=${offset}`;
         return makeRequest( url, {} ).then( data => {

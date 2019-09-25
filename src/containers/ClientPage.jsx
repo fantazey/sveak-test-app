@@ -1,5 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { loadClient } from '../actions/clients';
 
-const ClientPage = () => <div>props</div>;
+class ClientPage extends Component {
+	componentDidMount() {		
+        this.props.loadClient(
+        	this.props.match.params.id
+    	);
+    }
 
-export default ClientPage;
+	render() {		
+		return (
+			<div className='page-content'>
+				tra tra tr
+			</div>
+		)
+	}
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators( {
+    loadClient
+}, dispatch );
+
+export default connect( '', mapDispatchToProps )( ClientPage );
