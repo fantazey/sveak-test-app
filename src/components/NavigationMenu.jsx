@@ -8,7 +8,7 @@ const NAV = [
     { path: '/:id/comments', label: 'Comments' }
 ];
 
-const NavigationMenu = () => (
+const NavigationMenu = () =>
     <nav className='navbar bg-light'>
         <ul className='nav nav-pills'>
             { NAV.map( ( item, index ) => <li className='nav-item' key={`navigation_li-_${index}`}>
@@ -22,7 +22,7 @@ const NavigationMenu = () => (
             </li> ) }
         </ul>
     </nav>
-);
+;
 
 
 export default NavigationMenu;

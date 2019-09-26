@@ -9,9 +9,11 @@ const DEF_OFFSET = 0;
 /**
  * @typedef {Object} apiClient
  * @property {Number} id
- * @property {Number} firstName
- * @property {Number} lastName
- * @property {Number} email
+ * @property {String} firstName
+ * @property {String} lastName
+ * @property {String} email
+ * @property {String} regCode
+ * @property {String} phone
  */
 
 /**

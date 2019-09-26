@@ -39,7 +39,8 @@ function loadClientHandler( state, payload ) {
     client = { ...client, ...clientFromPayload };
     return {
         ...state,
-        clients: list
+        clients: list,
+        currentClient: client
     };
 }
 
