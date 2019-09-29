@@ -92,12 +92,10 @@ router.put( '/clients/:id', function( req, res ) {
     if ( !client ) {
         return res.status( 404 ).json( { 'error': 'not found' } );
     }
-    clients.splice( clients.indexOf( client ), 1 );
     // todo: add validation and create comment handler
     client = { ...client, ...req.body };
-    req.db.clients = [ ...clients, client ];
     writeFile( req.db );
-    res.json( { clients: [ client ] } );
+    res.json( { clients: client } );
 } );
 
 router.post( '/clients', function( req, res ) {

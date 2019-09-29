@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import ClientInfoView from './ClientInfo/View';
 import ClientInfoEdit from './ClientInfo/Edit';
 
-
 export class ClientInfo extends Component {
     constructor() {
         super( ...arguments );

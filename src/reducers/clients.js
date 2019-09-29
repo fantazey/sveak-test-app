@@ -1,6 +1,7 @@
 import {
     FETCH_CLIENT_LIST_FAIL, FETCH_CLIENT_LIST_PENDING, FETCH_CLIENT_LIST_SUCCESS,
-    FETCH_CLIENT_FAIL, FETCH_CLIENT_PENDING, FETCH_CLIENT_SUCCESS
+    FETCH_CLIENT_FAIL, FETCH_CLIENT_PENDING, FETCH_CLIENT_SUCCESS,
+    UPDATE_CLIENT_FAIL, UPDATE_CLIENT_PENDING, UPDATE_CLIENT_SUCCESS
 } from '../actions/clients';
 
 export const ADD = 'clients/ADD_CLIENT';
@@ -11,6 +12,7 @@ const initialState = {
     pending: true,
     clients: [],
     currentId: null,
+    currentClient: null,
     error: null
 };
 
@@ -49,16 +51,22 @@ function fetchClientByIdHandler( state, clientFromPayload ) {
         pending: false
     };
 }
+function updateClientHandler( state, clientFromPayload ) {
+    let client = state.clients.find( x => x.id === state.currentId );
+    client = { ...client, ...clientFromPayload };
+    return {
+        ...state,
+        currentClient: client,
+        pending: false
+    };
+}
+
 function addHandler( state ) {
     return {
         ...state
     };
 }
-function editHandler( state ) {
-    return {
-        ...state
-    };
-}
+
 function deleteHandler( state ) {
     return {
         ...state
@@ -96,10 +104,21 @@ export default ( state = initialState, action ) => {
             pending: false,
             error: action.error
         };
+    case UPDATE_CLIENT_PENDING:
+        return {
+            ...state,
+            pending: true
+        };
+    case UPDATE_CLIENT_SUCCESS:
+        return updateClientHandler( state, action.client );
+    case UPDATE_CLIENT_FAIL:
+        return {
+            ...state,
+            pending: false,
+            error: action.error
+        };
     case ADD:
         return addHandler( state, action.data );
-    case EDIT:
-        return editHandler( state, action.id, action.data );
     case DELETE:
         return deleteHandler( state, action.id );
     default:
