@@ -1,34 +1,68 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ClientInfoView from './ClientInfo/View';
+import ClientInfoEdit from './ClientInfo/Edit';
+
 
 export class ClientInfo extends Component {
+    constructor() {
+        super( ...arguments );
+        this.toggleMode = this.toggleMode.bind( this );
+        this.state = {
+            isEditMode: false
+        };
+    }
+
+    toggleMode() {
+        this.setState( {
+            isEditMode: !this.state.isEditMode
+        } );
+    }
+
+    get componentForMode() {
+        if ( this.state.isEditMode ) {
+            return <ClientInfoEdit {...this.propsForComponent}/>;
+        }
+        return <ClientInfoView {...this.propsForComponent}/>;
+    }
+
+    get propsForComponent() {
+        return {
+            firstName: this.client.firstName,
+            lastName: this.client.lastName,
+            regCode: this.client.regCode,
+            phone: this.client.phone,
+            address: this.client.address,
+            email: this.client.email
+        };
+    }
+
+
+    get client() {
+        return this.props.client;
+    }
+
     render() {
-        if ( !this.props.client ) {
+        if ( !this.client ) {
             return null;
         }
         return (
-            <div>
-                <dl className='col-6'>
-                    <dt>First name:</dt>
-                    <dd>{this.props.client.firstName}</dd>
-                    <dt>Last name:</dt>
-                    <dd>{this.props.client.lastName}</dd>
-                    <dt>Reg code:</dt>
-                    <dd>{this.props.client.regCode}</dd>
-                </dl>
-                <dl className='col-6'>
-                    <dt>Phone:</dt>
-                    <dd>{this.props.client.phone}</dd>
-                    <dt>Address:</dt>
-                    <dd>{this.props.client.address}</dd>
-                </dl>
+            <div className='card mt-4'>
+                <div className='card-header'>
+                    {this.client.lastName}&nbsp;{this.client.firstName}
+                    <span className='float-right btn-link' onClick={this.toggleMode}>
+                        {this.state.isEditMode ? 'cancel' : 'edit'}
+                    </span>
+                </div>
+                <div className='card-body'>
+                    {this.componentForMode}
+                </div>
             </div>
         );
     }
 }
 
 const mapStateToProps = ( { ClientsReducer: state } ) => {
-    debugger;
     return {
         client: state.currentClient
     };

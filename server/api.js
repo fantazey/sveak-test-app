@@ -14,6 +14,7 @@ const DEF_OFFSET = 0;
  * @property {String} email
  * @property {String} regCode
  * @property {String} phone
+ * @property {String} address
  */
 
 /**
@@ -55,7 +56,13 @@ router.get( '/clients', function( req, res ) {
     const clients = req.db.clients;
     const limit = +req.query.limit || DEF_LIMIT;
     const offset = +req.query.offset || DEF_OFFSET;
-    const resp = clients.slice( offset, limit + offset );
+    const resp = clients.slice( offset, limit + offset ).map( x => ( {
+        id: x.id,
+        firstName: x.firstName,
+        lastName: x.lastName,
+        phone: x.phone,
+        address: x.address
+    } ) );
     setTimeout( function() {
         return res.json( {
             clients: resp,

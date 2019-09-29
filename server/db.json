@@ -1,1 +1,1 @@
-{"clientsLastId":3,"commentsLastId":1,"clients":[{"id":1,"firstName":"Test","lastName":"Client1","email":"as@as.as"},{"id":2,"firstName":"Test22","lastName":"Client222","email":"a1231s@as.as"}],"comments":[{"id":1,"clientId":1,"text":"bla bla"}]}
+{"clientsLastId":3,"commentsLastId":1,"clients":[{"id":1,"firstName":"Test","lastName":"Client1","email":"as@as.as", "phone": "123123", "regCode": "2265123", "address": "city, street, 12-12"},{"id":2,"firstName":"Test22","lastName":"Client222","email":"a1231s@as.as"}],"comments":[{"id":1,"clientId":1,"text":"bla bla"}]}

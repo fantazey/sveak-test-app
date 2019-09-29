@@ -8,22 +8,27 @@ export class ClientTable extends Component {
             return null;
         }
         return (
-            <div>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Client</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { this.props.clients.map( ( client, index ) =>
-                            <ClientRow key={`client-row-${index}`} client={client}/>
-                        ) }
-                    </tbody>
-                </table>
+            <div className='card mt-4'>
+                <div className='card-header'>
+                    List
+                </div>
+                <div className='card-body'>
+                    <table className='table'>
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { this.props.clients.map( ( client, index ) =>
+                                <ClientRow key={`client-row-${index}`} client={client}/>
+                            ) }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }

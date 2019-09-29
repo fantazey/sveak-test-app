@@ -8,7 +8,7 @@ export const EDIT = 'clients/EDIT_CLIENT';
 export const DELETE = 'clients/DELETE_CLIENT';
 
 const initialState = {
-    pending: false,
+    pending: true,
     clients: [],
     currentId: null,
     error: null
@@ -35,7 +35,6 @@ function fetchClientsListHandler( state, payloadClientsList ) {
         pending: false
     };
 }
-
 function fetchClientByIdHandler( state, clientFromPayload ) {
     const list = state.clients;
     let client = list.find( x => x.id === clientFromPayload.id );
@@ -50,7 +49,6 @@ function fetchClientByIdHandler( state, clientFromPayload ) {
         pending: false
     };
 }
-
 function addHandler( state ) {
     return {
         ...state
@@ -73,7 +71,8 @@ export default ( state = initialState, action ) => {
         return {
             ...state,
             pending: true,
-            currentId: null
+            currentId: null,
+            currentClient: null
         };
     case FETCH_CLIENT_LIST_SUCCESS:
         return fetchClientsListHandler( state, action.clients );
