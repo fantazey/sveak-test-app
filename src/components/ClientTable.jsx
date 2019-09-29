@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ClientRow from '../components/ClientRow';
-import ClientsReducer from '../reducers/clients';
 
 export class ClientTable extends Component {
     render() {
@@ -30,9 +29,8 @@ export class ClientTable extends Component {
     }
 }
 
-function mapStateToProps( state, props ) {
-    const list = state.ClientsReducer.clients || [];
-    return { clients: [ ...list ] };
-}
+const mapStateToProps = ( { ClientsReducer: state } ) => ( {
+    clients: state.clients || []
+} );
 
 export default connect( mapStateToProps, null )( ClientTable );

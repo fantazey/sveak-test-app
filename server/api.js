@@ -56,14 +56,16 @@ router.get( '/clients', function( req, res ) {
     const limit = +req.query.limit || DEF_LIMIT;
     const offset = +req.query.offset || DEF_OFFSET;
     const resp = clients.slice( offset, limit + offset );
-    return res.json( {
-        clients: resp,
-        meta: {
-            total: clients.length,
-            limit,
-            offset
-        }
-    } );
+    setTimeout( function() {
+        return res.json( {
+            clients: resp,
+            meta: {
+                total: clients.length,
+                limit,
+                offset
+            }
+        } );
+    }, Math.random() * 2000 );
 } );
 
 router.get( '/clients/:id', function( req, res ) {
@@ -72,7 +74,9 @@ router.get( '/clients/:id', function( req, res ) {
     if ( !client ) {
         return res.status( 404 ).json( { 'error': 'not found' } );
     }
-    return res.json( { 'clients': client } );
+    setTimeout( function () {
+        return res.json( { 'clients': client } );
+    }, Math.random() * 2000 );
 } );
 
 router.put( '/clients/:id', function( req, res ) {

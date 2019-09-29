@@ -1,27 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { loadClient } from '../actions/clients';
-import { ClientInfo } from '../components/ClientInfo';
+import { fetchClient } from '../actions/clients';
+import ClientInfo from '../components/ClientInfo';
+import { Loader } from './base/Loader';
 
-class ClientPage extends Component {
-    componentDidMount () {
-        this.props.loadClient(
+class ClientPage extends Loader {
+    fetchData() {
+        this.props.fetchData(
             this.props.match.params.id
         );
     }
 
-    render () {
-        return (
-            <div className='page-content'>
-                <ClientInfo/>
-            </div>
-        );
+    get whenLoaded() {
+        return <ClientInfo/>;
     }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators( {
-    loadClient
+    fetchData: fetchClient
 }, dispatch );
 
-export default connect( '', mapDispatchToProps )( ClientPage );
+const mapStateToProps = ( { ClientsReducer: state } ) => ( {
+    pending: state.pending
+} );
+
+export default connect( mapStateToProps, mapDispatchToProps )( ClientPage );

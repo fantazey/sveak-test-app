@@ -1,18 +1,28 @@
+import {
+    FETCH_CLIENT_LIST_FAIL, FETCH_CLIENT_LIST_PENDING, FETCH_CLIENT_LIST_SUCCESS,
+    FETCH_CLIENT_FAIL, FETCH_CLIENT_PENDING, FETCH_CLIENT_SUCCESS
+} from '../actions/clients';
+
 export const ADD = 'clients/ADD_CLIENT';
 export const EDIT = 'clients/EDIT_CLIENT';
 export const DELETE = 'clients/DELETE_CLIENT';
-export const LOAD = 'clients/LOAD_CLIENTS';
-export const LOAD_CLIENT = 'clients/LOAD_CLIENT';
 
-function loadHandler( state, payload ) {
+const initialState = {
+    pending: false,
+    clients: [],
+    currentId: null,
+    error: null
+};
+
+function fetchClientsListHandler( state, payloadClientsList ) {
     const clients = state.clients || [];
     let list = [];
     if ( clients.length === 0 ) {
-        list = payload.clients;
+        list = payloadClientsList;
     } else {
         clients.forEach( client => {
             let newClient = client;
-            const clientFromPayload = payload.clients.find( x => x.id === client.id );
+            const clientFromPayload = payloadClientsList.find( x => x.id === client.id );
             if ( clientFromPayload ) {
                 newClient = { ...client, ...clientFromPayload };
             }
@@ -21,17 +31,13 @@ function loadHandler( state, payload ) {
     }
     return {
         ...state,
-        clients: list
+        clients: list,
+        pending: false
     };
 }
 
-
-function loadClientHandler( state, payload ) {
-    if ( !payload.hasOwnProperty( 'clients' ) ) {
-        console.error( 'Client not found' );
-    }
+function fetchClientByIdHandler( state, clientFromPayload ) {
     const list = state.clients;
-    const clientFromPayload = payload.clients;
     let client = list.find( x => x.id === clientFromPayload.id );
     if ( !client ) {
         client = {};
@@ -40,7 +46,8 @@ function loadClientHandler( state, payload ) {
     return {
         ...state,
         clients: list,
-        currentClient: client
+        currentClient: client,
+        pending: false
     };
 }
 
@@ -60,12 +67,36 @@ function deleteHandler( state ) {
     };
 }
 
-export default ( state = {}, action ) => {
+export default ( state = initialState, action ) => {
     switch ( action.type ) {
-    case LOAD:
-        return loadHandler( state, action.payload );
-    case LOAD_CLIENT:
-        return loadClientHandler( state, action.payload );
+    case FETCH_CLIENT_LIST_PENDING:
+        return {
+            ...state,
+            pending: true,
+            currentId: null
+        };
+    case FETCH_CLIENT_LIST_SUCCESS:
+        return fetchClientsListHandler( state, action.clients );
+    case FETCH_CLIENT_LIST_FAIL:
+        return {
+            ...state,
+            pending: false,
+            error: action.error
+        };
+    case FETCH_CLIENT_PENDING:
+        return {
+            ...state,
+            pending: true,
+            currentId: action.id
+        };
+    case FETCH_CLIENT_SUCCESS:
+        return fetchClientByIdHandler( state, action.client );
+    case FETCH_CLIENT_FAIL:
+        return {
+            ...state,
+            pending: false,
+            error: action.error
+        };
     case ADD:
         return addHandler( state, action.data );
     case EDIT:

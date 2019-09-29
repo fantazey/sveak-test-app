@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 
 export class ClientInfo extends Component {
     render() {
+        if ( !this.props.client ) {
+            return null;
+        }
         return (
             <div>
                 <dl className='col-6'>
@@ -24,9 +27,11 @@ export class ClientInfo extends Component {
     }
 }
 
-function mapStateToProps( state, props ) {
-    const client = state.ClientsReducer.currentClient;
-    return { client: client };
-}
+const mapStateToProps = ( { ClientsReducer: state } ) => {
+    debugger;
+    return {
+        client: state.currentClient
+    };
+};
 
 export default connect( mapStateToProps, null )( ClientInfo );
