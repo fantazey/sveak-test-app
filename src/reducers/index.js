@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import CommentsReducer from './comments';
 import ClientsReducer from './clients';
-import { routerReducer as routing } from 'react-router-redux';
+import { connectRouter } from 'connected-react-router';
 
-export default combineReducers( {
-    CommentsReducer,
+const createRootReducer = history =>combineReducers( {
+    router: connectRouter( history ),
     ClientsReducer,
-    routing
+    CommentsReducer
 } );
+
+export default createRootReducer;
