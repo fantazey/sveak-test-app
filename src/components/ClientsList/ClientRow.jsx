@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
-import { deleteClient } from '../actions/clients';
+import { deleteClient } from '../../actions/clients';
 
 class ClientRow extends Component {
     get client() {

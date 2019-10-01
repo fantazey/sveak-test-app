@@ -1,39 +1,34 @@
 import {
-    FETCH_CLIENT_LIST_FAIL, FETCH_CLIENT_LIST_PENDING, FETCH_CLIENT_LIST_SUCCESS,
-    FETCH_CLIENT_FAIL, FETCH_CLIENT_PENDING, FETCH_CLIENT_SUCCESS,
-    UPDATE_CLIENT_FAIL, UPDATE_CLIENT_PENDING, UPDATE_CLIENT_SUCCESS
+    FETCH_CLIENT_LIST_FAIL,
+    FETCH_CLIENT_LIST_PENDING,
+    FETCH_CLIENT_LIST_SUCCESS,
+    FETCH_CLIENT_FAIL,
+    FETCH_CLIENT_PENDING,
+    FETCH_CLIENT_SUCCESS,
+    UPDATE_CLIENT_FAIL,
+    UPDATE_CLIENT_PENDING,
+    UPDATE_CLIENT_SUCCESS,
+    CREATE_CLIENT_PENDING,
+    CREATE_CLIENT_FAIL,
+    CREATE_CLIENT_SUCCESS,
+    DELETE_CLIENT_PENDING,
+    DELETE_CLIENT_SUCCESS,
+    DELETE_CLIENT_FAIL
 } from '../actions/clients';
-
-export const ADD = 'clients/ADD_CLIENT';
-export const EDIT = 'clients/EDIT_CLIENT';
-export const DELETE = 'clients/DELETE_CLIENT';
 
 const initialState = {
     pending: true,
     clients: [],
     currentId: null,
     currentClient: null,
+    operationSuccess: null,
     error: null
 };
 
 function fetchClientsListHandler( state, payloadClientsList ) {
-    const clients = state.clients || [];
-    let list = [];
-    if ( clients.length === 0 ) {
-        list = payloadClientsList;
-    } else {
-        clients.forEach( client => {
-            let newClient = client;
-            const clientFromPayload = payloadClientsList.find( x => x.id === client.id );
-            if ( clientFromPayload ) {
-                newClient = { ...client, ...clientFromPayload };
-            }
-            list.push( newClient );
-        } );
-    }
     return {
         ...state,
-        clients: list,
+        clients: payloadClientsList,
         pending: false
     };
 }
@@ -60,19 +55,18 @@ function updateClientHandler( state, clientFromPayload ) {
         pending: false
     };
 }
-
-function addHandler( state ) {
+function createClientHandler( state, clientFromPayload ) {
+    const clients = [ ...state.clients ];
+    clients.push( clientFromPayload );
     return {
-        ...state
+        ...state,
+        clients,
+        operationSuccess: true,
+        pending: false
     };
 }
 
-function deleteHandler( state ) {
-    return {
-        ...state
-    };
-}
-
+// eslint-disable-next-line complexity
 export default ( state = initialState, action ) => {
     switch ( action.type ) {
     case FETCH_CLIENT_LIST_PENDING:
@@ -84,6 +78,7 @@ export default ( state = initialState, action ) => {
         };
     case FETCH_CLIENT_LIST_SUCCESS:
         return fetchClientsListHandler( state, action.clients );
+    case FETCH_CLIENT_FAIL:
     case FETCH_CLIENT_LIST_FAIL:
         return {
             ...state,
@@ -98,29 +93,33 @@ export default ( state = initialState, action ) => {
         };
     case FETCH_CLIENT_SUCCESS:
         return fetchClientByIdHandler( state, action.client );
-    case FETCH_CLIENT_FAIL:
+    case CREATE_CLIENT_FAIL:
+    case UPDATE_CLIENT_FAIL:
+    case DELETE_CLIENT_FAIL:
         return {
             ...state,
             pending: false,
-            error: action.error
+            error: action.error,
+            operationSuccess: false
         };
+    case CREATE_CLIENT_PENDING:
     case UPDATE_CLIENT_PENDING:
+    case DELETE_CLIENT_PENDING:
         return {
             ...state,
-            pending: true
+            pending: true,
+            operationSuccess: null
         };
+    case CREATE_CLIENT_SUCCESS:
+        return createClientHandler( state, action.client );
     case UPDATE_CLIENT_SUCCESS:
         return updateClientHandler( state, action.client );
-    case UPDATE_CLIENT_FAIL:
+    case DELETE_CLIENT_SUCCESS:
         return {
             ...state,
             pending: false,
-            error: action.error
+            operationSuccess: true
         };
-    case ADD:
-        return addHandler( state, action.data );
-    case DELETE:
-        return deleteHandler( state, action.id );
     default:
         return state;
     }

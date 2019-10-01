@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LoadingIndicator from '../../components/LoadingIndicator';
+import LoadingIndicator from '../../components/base/LoadingIndicator';
 
 export class Loader extends Component {
     constructor() {

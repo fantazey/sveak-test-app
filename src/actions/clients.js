@@ -1,7 +1,3 @@
-import {
-    ADD,
-    DELETE
-} from '../reducers/clients';
 import { API_PATH } from '../confg';
 
 export const FETCH_CLIENT_LIST_PENDING = 'clients/FETCH_CLIENT_LIST_PENDING';
@@ -15,6 +11,14 @@ export const FETCH_CLIENT_FAIL = 'clients/FETCH_CLIENT_FAIL';
 export const UPDATE_CLIENT_PENDING = 'clients/UPDATE_CLIENT_PENDING';
 export const UPDATE_CLIENT_SUCCESS = 'clients/UPDATE_CLIENT_SUCCESS';
 export const UPDATE_CLIENT_FAIL = 'clients/UPDATE_CLIENT_FAIL';
+
+export const CREATE_CLIENT_PENDING = 'clients/CREATE_CLIENT_PENDING';
+export const CREATE_CLIENT_SUCCESS = 'clients/CREATE_CLIENT_SUCCESS';
+export const CREATE_CLIENT_FAIL = 'clients/CREATE_CLIENT_FAIL';
+
+export const DELETE_CLIENT_PENDING = 'clients/DELETE_CLIENT_PENDING';
+export const DELETE_CLIENT_SUCCESS = 'clients/DELETE_CLIENT_SUCCESS';
+export const DELETE_CLIENT_FAIL = 'clients/DELETE_CLIENT_FAIL';
 
 function fetchClientsListPending() {
     return {
@@ -99,6 +103,9 @@ export function updateClient( id, data ) {
         const url = `${API_PATH}/clients/${id}`;
         makeRequest( url, {
             method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify( data )
         } ).then( res => {
             dispatch( updateClientSuccess( res.clients ) );
@@ -108,34 +115,71 @@ export function updateClient( id, data ) {
     };
 }
 
-export const addClient = ( data ) => {
+function createClientPending() {
+    return {
+        type: CREATE_CLIENT_PENDING
+    };
+}
+function createClientSuccess( record ) {
+    return {
+        type: CREATE_CLIENT_SUCCESS,
+        client: record
+    };
+}
+function createClientFail( error ) {
+    return {
+        type: CREATE_CLIENT_FAIL,
+        error: error
+    };
+}
+export function createClient( data ) {
     return dispatch => {
+        dispatch( createClientPending() );
         const url = `${API_PATH}/clients`;
-        return makeRequest( url, {
+        makeRequest( url, {
             method: 'POST',
-            body: data
-        } ).then( data => {
-            dispatch( {
-                type: ADD,
-                payload: data
-            } );
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify( data )
+        } ).then( res => {
+            dispatch( createClientSuccess( res.clients ) );
+        } ).catch( err => {
+            dispatch( createClientFail( err ) );
         } );
     };
-};
+}
 
-export const deleteClient = ( id ) => {
+function deleteClientPending() {
+    return {
+        type: DELETE_CLIENT_PENDING
+    };
+}
+function deleteClientSuccess() {
+    return {
+        type: DELETE_CLIENT_SUCCESS
+    };
+}
+function deleteClientFail( error ) {
+    return {
+        type: DELETE_CLIENT_FAIL,
+        error: error
+    };
+}
+export function deleteClient( id ) {
     return dispatch => {
+        dispatch( deleteClientPending() );
         const url = `${API_PATH}/clients/${id}`;
         makeRequest( url, {
             method: 'DELETE'
-        } ).then( data => {
-            dispatch( {
-                type: DELETE,
-                payload: data
-            } );
+        } ).then( () => {
+            dispatch( deleteClientSuccess() );
+            dispatch( fetchClientsList() );
+        } ).catch( err => {
+            dispatch( deleteClientFail( err.error ) );
         } );
     };
-};
+}
 
 /**
  * Make http request

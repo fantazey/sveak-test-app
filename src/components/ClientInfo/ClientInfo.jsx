@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ClientInfoView from './ClientInfo/View';
-import ClientInfoEdit from './ClientInfo/Edit';
+import ClientInfoView from './View';
+import ClientInfoEdit from './Edit';
 
 export class ClientInfo extends Component {
     constructor() {

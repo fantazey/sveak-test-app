@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ClientRow from '../components/ClientRow';
+import ClientRow from './ClientRow';
 
 export class ClientTable extends Component {
     render() {

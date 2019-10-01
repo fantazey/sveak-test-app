@@ -20,7 +20,6 @@ export class ClientInfoEdit extends Component {
     }
 
     submit() {
-        debugger;
         this.props.updateClient( this.props.id, this.state );
     }
 

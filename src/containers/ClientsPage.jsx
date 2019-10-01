@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import ClientTable from '../components/ClientTable';
+import ClientTable from '../components/ClientsList/ClientTable';
 import { fetchClientsList } from '../actions/clients';
 import { Loader } from './base/Loader';
 

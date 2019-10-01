@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchClient } from '../actions/clients';
-import ClientInfo from '../components/ClientInfo';
+import ClientInfo from '../components/ClientInfo/ClientInfo';
 import { Loader } from './base/Loader';
 
 class ClientPage extends Loader {

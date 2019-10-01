@@ -110,7 +110,7 @@ router.post( '/clients', function( req, res ) {
     req.db.clients.push( client );
     req.db.clientsLastId = client.id;
     writeFile( req.db );
-    return res.json( { clients: [ client ] } );
+    return res.json( { clients: client } );
 } );
 
 router.delete( '/clients/:id', function( req, res ) {
