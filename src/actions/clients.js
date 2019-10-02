@@ -78,7 +78,7 @@ export function fetchClient( id ) {
     return dispatch => {
         dispatch( fetchClientPending( id ) );
         const url = `${API_PATH}/clients/${id}`;
-        makeRequest( url, {} ).then( res => {
+        return makeRequest( url, {} ).then( res => {
             dispatch( fetchClientSuccess( res.clients ) );
         } ).catch( err => {
             dispatch( fetchClientFail( err ) );

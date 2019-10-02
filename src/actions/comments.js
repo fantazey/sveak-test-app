@@ -10,9 +10,10 @@ function fetchCommentsListPending() {
         type: FETCH_COMMENTS_LIST_PENDING
     };
 }
-function fetchCommentsListSuccess( list ) {
+function fetchCommentsListSuccess( user, list ) {
     return {
         type: FETCH_COMMENTS_LIST_SUCCESS,
+        user: user,
         comments: list
     };
 }
@@ -24,11 +25,11 @@ function fetchCommentsListFail( error ) {
 }
 export function fetchCommentsList( id, limit = 10, offset = 0 ) {
     return dispatch => {
-        return fetchClient( id ).then( () => {
+        return dispatch( fetchClient( id ) ).then( () => {
             dispatch( fetchCommentsListPending() );
             const url = `${API_PATH}/clients/${id}/comments?limit=${limit}&offset=${offset}`;
             makeRequest( url, {} ).then( res => {
-                dispatch( fetchCommentsListSuccess( res.comments ) );
+                dispatch( fetchCommentsListSuccess( +id, res.comments ) );
             } ).catch( err => {
                 dispatch( fetchCommentsListFail( err ) );
             } );

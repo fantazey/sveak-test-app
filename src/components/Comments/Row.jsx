@@ -7,7 +7,7 @@ export default class CommentsRow extends Component {
 
     get formatDate() {
         const date = this.comment.createdAt;
-        const dateStr = `${date.getDate()}-${1 + date.getMonth()}-${date.getFullYear()}`;
+        const dateStr = `${date.getDate()}.${1 + date.getMonth()}.${date.getFullYear()}`;
         const timeStr = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
         return `${dateStr} ${timeStr}`;
     }

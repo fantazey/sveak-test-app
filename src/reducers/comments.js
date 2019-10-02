@@ -14,14 +14,15 @@ const initialState = {
     error: null
 };
 
-function fetchCommentsListHandler( state, commentsList ) {
+function fetchCommentsListHandler( state, user, commentsList ) {
+    const allComments = state.comments.reject( x => x.user === user );
     const comments = commentsList.map( x => ( {
         ...x,
         createdAt: new Date( x.createdAt )
     } ) );
     return {
         ...state,
-        comments: [].concat( state.comments, comments ),
+        comments: [].concat( allComments, comments ),
         pending: false
     };
 }
@@ -34,7 +35,7 @@ export default ( state = initialState, action ) => {
             pending: true
         };
     case FETCH_COMMENTS_LIST_SUCCESS:
-        return fetchCommentsListHandler( state, action.comments );
+        return fetchCommentsListHandler( state, action.user, action.comments );
     case FETCH_COMMENTS_LIST_FAIL:
         return {
             ...state,

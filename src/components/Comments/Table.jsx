@@ -37,10 +37,9 @@ export class CommentsTable extends Component {
 }
 
 function mapStateToProps( { CommentsReducer, ClientsReducer } ) {
-    debugger;
     return {
         client: ClientsReducer.currentClient,
-        comments: CommentsReducer.comments.filter( x=>x.user === ClientsReducer.currentId )
+        comments: CommentsReducer.comments.filter( x=> x.user === +ClientsReducer.currentId )
     };
 }
 
