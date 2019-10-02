@@ -1,4 +1,5 @@
 import { API_PATH } from '../confg';
+export const RESET_PENDING = 'clients/RESET_PENDING';
 
 export const FETCH_CLIENT_LIST_PENDING = 'clients/FETCH_CLIENT_LIST_PENDING';
 export const FETCH_CLIENT_LIST_SUCCESS = 'clients/FETCH_CLIENT_LIST_SUCCESS';
@@ -19,6 +20,12 @@ export const CREATE_CLIENT_FAIL = 'clients/CREATE_CLIENT_FAIL';
 export const DELETE_CLIENT_PENDING = 'clients/DELETE_CLIENT_PENDING';
 export const DELETE_CLIENT_SUCCESS = 'clients/DELETE_CLIENT_SUCCESS';
 export const DELETE_CLIENT_FAIL = 'clients/DELETE_CLIENT_FAIL';
+
+export function resetPending() {
+    return {
+        type: RESET_PENDING
+    };
+}
 
 function fetchClientsListPending() {
     return {

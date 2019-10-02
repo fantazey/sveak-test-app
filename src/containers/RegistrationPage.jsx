@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
-import { createClient } from '../actions/clients';
+import { createClient, resetPending } from '../actions/clients';
 import { connect } from 'react-redux';
 import Field from '../components/base/Field';
 import LoadingIndicator from '../components/base/LoadingIndicator';
@@ -9,6 +9,7 @@ import FailIndicator from '../components/base/FailIndicator';
 
 export class RegistrationPage extends Component {
     constructor( props ) {
+        props.resetPending();
         super( props );
         this.submit = this.submit.bind( this );
         this.fieldUpdate = this.fieldUpdate.bind( this );
@@ -104,7 +105,8 @@ const mapStateToProps = ( { ClientsReducer: state } ) => {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators( {
-    createClient: createClient
+    createClient: createClient,
+    resetPending: resetPending
 }, dispatch );
 
 export default connect( mapStateToProps, mapDispatchToProps )( RegistrationPage );

@@ -13,7 +13,7 @@ import {
     CREATE_CLIENT_SUCCESS,
     DELETE_CLIENT_PENDING,
     DELETE_CLIENT_SUCCESS,
-    DELETE_CLIENT_FAIL
+    DELETE_CLIENT_FAIL, RESET_PENDING
 } from '../actions/clients';
 
 const initialState = {
@@ -69,6 +69,11 @@ function createClientHandler( state, clientFromPayload ) {
 // eslint-disable-next-line complexity
 export default ( state = initialState, action ) => {
     switch ( action.type ) {
+    case RESET_PENDING:
+        return {
+            ...state,
+            pending: false
+        };
     case FETCH_CLIENT_LIST_PENDING:
         return {
             ...state,
