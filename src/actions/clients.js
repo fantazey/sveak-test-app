@@ -194,7 +194,7 @@ export function deleteClient( id ) {
  * @param params
  * @returns {Promise<any>}
  */
-function makeRequest( url, params ) {
+export function makeRequest( url, params ) {
     return fetch( url, params ).then(
         res => res.json(),
     );

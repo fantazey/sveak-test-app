@@ -15,14 +15,18 @@ const DEF_OFFSET = 0;
  * @property {String} regCode
  * @property {String} phone
  * @property {String} address
+ * @property {Number} deletedAt
+ * @property {Boolean} deleted
  */
 
 /**
  * @typedef {Object} apiComment
  * @property {Number} id
- * @property {Number} clientId
- * @property {Boolean} isDeleted
- * @property {String} text
+ * @property {Number} user
+ * @property {Boolean} [isDeleted]
+ * @property {String} comment
+ * @property {Number} createdAt
+ * @property {Boolean} system
  */
 
 /**
@@ -56,13 +60,16 @@ router.get( '/clients', function( req, res ) {
     const clients = req.db.clients;
     const limit = +req.query.limit || DEF_LIMIT;
     const offset = +req.query.offset || DEF_OFFSET;
-    const resp = clients.slice( offset, limit + offset ).map( x => ( {
-        id: x.id,
-        firstName: x.firstName,
-        lastName: x.lastName,
-        phone: x.phone,
-        address: x.address
-    } ) );
+    const resp = clients
+        .filter( x => !x.deleted )
+        .slice( offset, limit + offset )
+        .map( x => ( {
+            id: x.id,
+            firstName: x.firstName,
+            lastName: x.lastName,
+            phone: x.phone,
+            address: x.address
+        } ) );
     setTimeout( function() {
         return res.json( {
             clients: resp,
@@ -89,11 +96,37 @@ router.get( '/clients/:id', function( req, res ) {
 router.put( '/clients/:id', function( req, res ) {
     const clients = req.db.clients;
     let client = clients.find( x => x.id === +req.params.id );
+    const oldClient = { ...client };
     if ( !client ) {
         return res.status( 404 ).json( { 'error': 'not found' } );
     }
+    if ( req.body.hasOwnProperty( 'id' ) ) {
+        return res.status( 400 ).json( { 'error': 'ID could not be changed' } );
+    }
     // todo: add validation and create comment handler
     client = { ...client, ...req.body };
+    let commentMessage = [
+        'Fields was changed:'
+    ];
+    Object.keys( client ).forEach( field => {
+        if ( client[ field ] !== oldClient[ field ] ) {
+            commentMessage = commentMessage.concat( [
+                'Field:', field,
+                'changed from:', oldClient[ field ] || '',
+                'to', client[ field ] || '',
+                ';'
+            ] );
+        }
+    } );
+    const comment = {
+        id: req.db.commentsLastId + 1,
+        user: client.id,
+        comment: commentMessage.join( ' ' ),
+        createdAt: ( new Date() ).getTime(),
+        system: true
+    };
+    req.db.commentsLastId = comment.id;
+    req.db.comments.push( comment );
     writeFile( req.db );
     res.json( { clients: client } );
 } );
@@ -109,6 +142,15 @@ router.post( '/clients', function( req, res ) {
     };
     req.db.clients.push( client );
     req.db.clientsLastId = client.id;
+    const comment = {
+        id: req.db.commentsLastId + 1,
+        user: client.id,
+        comment: 'User registered',
+        createdAt: ( new Date() ).getTime(),
+        system: true
+    };
+    req.db.comments.push( comment );
+    req.db.commentsLastId = comment.id;
     writeFile( req.db );
     return res.json( { clients: client } );
 } );
@@ -119,6 +161,8 @@ router.delete( '/clients/:id', function( req, res ) {
     if ( !client ) {
         return res.status( 404 ).json( { 'error': 'not found' } );
     }
+    client.deleted = true;
+    client.deletedAt = ( new Date() ).getTime();
     clients.splice( clients.indexOf( client ), 1 );
     req.db.clients = clients;
     writeFile( req.db );
@@ -129,10 +173,11 @@ router.get( '/clients/:id/comments', function( req, res ) {
     const comments = req.db.comments;
     const limit = +req.query.limit || DEF_LIMIT;
     const offset = +req.query.offset || DEF_OFFSET;
+    const commentsLimit = comments
+        .filter( x => x.user === +req.params.id && !x.isDeleted )
+        .slice( offset, limit + offset );
     return res.json( {
-        comments: comments.filter(
-            x => x.clientId === +req.params.id && !x.isDeleted
-        ).slice( offset, limit + offset )
+        comments: commentsLimit
     } );
 } );
 
