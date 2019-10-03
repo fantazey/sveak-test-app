@@ -1,5 +1,6 @@
 import React from 'react';
 
-const FailIndicator = () => <div className='alert alert-danger mt-4'>Error</div>;
+const FailIndicator = props =>
+    <div className='alert alert-danger mt-4'>{props.text || 'Error'}</div>;
 
 export default FailIndicator;

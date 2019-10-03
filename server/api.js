@@ -93,18 +93,40 @@ router.get( '/clients/:id', function( req, res ) {
     }, Math.random() * 2000 );
 } );
 
-router.put( '/clients/:id', function( req, res ) {
-    const clients = req.db.clients;
-    let client = clients.find( x => x.id === +req.params.id );
-    const oldClient = { ...client };
-    if ( !client ) {
-        return res.status( 404 ).json( { 'error': 'not found' } );
+/**
+ *
+ * @param {apiClient} data
+ * @private
+ */
+function validateClient( data ) {
+    const onlyChars = new RegExp( /\w+/ );
+    const onlyNumbers = new RegExp( /\d+/ );
+    const email = new RegExp( /^[\d\w]+@[\d\w]+\.\w{2}$/ );
+    const charKeys = [ 'firstName', 'lastName', 'address' ];
+    const numberKeys = [ 'regCode', 'phone' ];
+    let dataValid = true;
+    const empty = ( k, data ) => data.hasOwnProperty( k ) && data[k].trim().length === 0;
+    const errors = {};
+    charKeys.forEach( k => {
+        if ( empty( k, data ) || !onlyChars.test( data[ k ] ) ) {
+            errors[ k ] = true;
+            dataValid = false;
+        }
+    } );
+    numberKeys.forEach( k => {
+        if ( empty( k, data ) || !onlyNumbers.test( data[ k ] ) ) {
+            errors[ k ] = true;
+            dataValid = false;
+        }
+    } );
+    if ( empty( 'email', data ) || !email.test( data.email ) ) {
+        dataValid = false;
+        errors.email = true;
     }
-    if ( req.body.hasOwnProperty( 'id' ) ) {
-        return res.status( 400 ).json( { 'error': 'ID could not be changed' } );
-    }
-    // todo: add validation and create comment handler
-    client = { ...client, ...req.body };
+    return { dataValid, errors };
+}
+
+function createUpdateComment( client, oldClient, id ) {
     let commentMessage = [
         'Fields was changed:'
     ];
@@ -118,23 +140,42 @@ router.put( '/clients/:id', function( req, res ) {
             ] );
         }
     } );
-    const comment = {
-        id: req.db.commentsLastId + 1,
+    return {
+        id: id + 1,
         user: client.id,
         comment: commentMessage.join( ' ' ),
         createdAt: ( new Date() ).getTime(),
         system: true
     };
-    req.db.commentsLastId = comment.id;
+}
+
+router.put( '/clients/:id', function( req, res ) {
+    const clients = req.db.clients;
+    let client = clients.find( x => x.id === +req.params.id );
+    const oldClient = { ...client };
+    if ( !client ) {
+        return res.status( 404 ).json( { 'error': 'not found' } );
+    }
+    if ( req.body.hasOwnProperty( 'id' ) ) {
+        return res.status( 400 ).json( { 'error': 'ID could not be changed' } );
+    }
+    const { dataValid, errors } = validateClient( req.body );
+    if ( !dataValid ) {
+        return res.status( 400 ).json( { 'error': 'Form invalid', 'fields': errors } );
+    }
+    client = { ...client, ...req.body };
+    const newId = req.db.commentsLastId + 1;
+    const comment = createUpdateComment( client, oldClient, newId );
+    req.db.commentsLastId = newId;
     req.db.comments.push( comment );
     writeFile( req.db );
     res.json( { clients: client } );
 } );
 
 router.post( '/clients', function( req, res ) {
-    // todo: add validation
-    if ( !req.body.firstName || !req.body.lastName ) {
-        return res.status( 400 ).json( { 'error': 'invalid form params' } );
+    const { dataValid, errors } = validateClient( req.body );
+    if ( !dataValid ) {
+        return res.status( 400 ).json( { 'error': 'Form invalid', 'fields': errors } );
     }
     const client = {
         id: req.db.clientsLastId + 1,

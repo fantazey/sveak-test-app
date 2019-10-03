@@ -115,7 +115,11 @@ export function updateClient( id, data ) {
             },
             body: JSON.stringify( data )
         } ).then( res => {
-            dispatch( updateClientSuccess( res.clients ) );
+            if ( res.hasOwnProperty( 'error' ) ) {
+                dispatch( updateClientFail( res ) );
+            } else {
+                dispatch( updateClientSuccess( res.clients ) );
+            }
         } ).catch( err => {
             dispatch( updateClientFail( err ) );
         } );
@@ -196,6 +200,6 @@ export function deleteClient( id ) {
  */
 export function makeRequest( url, params ) {
     return fetch( url, params ).then(
-        res => res.json(),
+        res => res.json()
     );
 }

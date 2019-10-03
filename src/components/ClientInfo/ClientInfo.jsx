@@ -5,6 +5,7 @@ import ClientInfoEdit from './Edit';
 
 export class ClientInfo extends Component {
     constructor() {
+        debugger;
         super( ...arguments );
         this.toggleMode = this.toggleMode.bind( this );
         this.state = {
@@ -35,7 +36,6 @@ export class ClientInfo extends Component {
             email: this.client.email
         };
     }
-
 
     get client() {
         return this.props.client;
