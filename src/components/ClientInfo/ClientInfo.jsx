@@ -4,12 +4,11 @@ import ClientInfoView from './View';
 import ClientInfoEdit from './Edit';
 
 export class ClientInfo extends Component {
-    constructor() {
-        debugger;
+    constructor( props ) {
         super( ...arguments );
         this.toggleMode = this.toggleMode.bind( this );
         this.state = {
-            isEditMode: false
+            isEditMode: false === props.operationSuccess
         };
     }
 
@@ -63,7 +62,8 @@ export class ClientInfo extends Component {
 
 const mapStateToProps = ( { ClientsReducer: state } ) => {
     return {
-        client: state.currentClient
+        client: state.currentClient,
+        operationSuccess: state.operationSuccess
     };
 };
 

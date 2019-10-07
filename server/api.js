@@ -48,6 +48,13 @@ function readFile() {
  * @param {apiDB} json
  */
 function writeFile( json ) {
+    const stats = fs.statSync( dbFile );
+    // size in bytes
+    const size = stats.size;
+    // if file larger then 5mb throw IO error
+    if ( size > 5e6 ) {
+        throw Error( 'Not enough space' );
+    }
     fs.writeFileSync( dbFile, JSON.stringify( json ) );
 }
 
@@ -105,7 +112,7 @@ function validateClient( data ) {
     const charKeys = [ 'firstName', 'lastName', 'address' ];
     const numberKeys = [ 'regCode', 'phone' ];
     let dataValid = true;
-    const empty = ( k, data ) => data.hasOwnProperty( k ) && data[k].trim().length === 0;
+    const empty = ( k, data ) => data.hasOwnProperty( k ) && data[ k ].trim().length === 0;
     const errors = {};
     charKeys.forEach( k => {
         if ( empty( k, data ) || !onlyChars.test( data[ k ] ) ) {
@@ -169,7 +176,7 @@ router.put( '/clients/:id', function( req, res ) {
     req.db.commentsLastId = newId;
     req.db.comments.push( comment );
     writeFile( req.db );
-    res.json( { clients: client } );
+    return res.json( { clients: client } );
 } );
 
 router.post( '/clients', function( req, res ) {
@@ -250,5 +257,9 @@ router.delete( 'comments/:id', function( req, res ) {
     return res.json( { comments: [ comment ] } );
 } );
 
+router.use( function( err, req, res ) {
+    console.log( err.stack );
+    return res.status( 500 ).json( { error: err.message } );
+} );
 
 module.exports = router;

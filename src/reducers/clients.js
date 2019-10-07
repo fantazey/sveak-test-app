@@ -60,9 +60,7 @@ function createClientHandler( state, clientFromPayload ) {
     clients.push( clientFromPayload );
     return {
         ...state,
-        clients,
-        operationSuccess: true,
-        pending: false
+        clients
     };
 }
 
@@ -113,12 +111,21 @@ export default ( state = initialState, action ) => {
         return {
             ...state,
             pending: true,
-            operationSuccess: null
+            operationSuccess: null,
+            error: null
         };
     case CREATE_CLIENT_SUCCESS:
-        return createClientHandler( state, action.client );
+        return {
+            ...createClientHandler( state, action.client ),
+            operationSuccess: true,
+            pending: false
+        };
     case UPDATE_CLIENT_SUCCESS:
-        return updateClientHandler( state, action.client );
+        return {
+            ...updateClientHandler( state, action.client ),
+            pending: false,
+            operationSuccess: true
+        };
     case DELETE_CLIENT_SUCCESS:
         return {
             ...state,

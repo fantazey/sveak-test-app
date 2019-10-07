@@ -7,18 +7,25 @@ import FailIndicator from '../base/FailIndicator';
 import SuccessIndicator from '../base/SuccessIndicator';
 
 export class ClientInfoEdit extends Component {
+    get fieldList() {
+        return [
+            'firstName', 'lastName', 'regCode',
+            'email', 'phone', 'address'
+        ];
+    }
+
     constructor( props ) {
         super( props );
         this.fieldUpdate = this.fieldUpdate.bind( this );
         this.submit = this.submit.bind( this );
-        this.state = {
-            firstName: props.firstName,
-            lastName: props.lastName,
-            regCode: props.regCode,
-            email: props.email,
-            phone: props.phone,
-            address: props.address
-        };
+        const fieldErrors = props.error && props.error.fields || {};
+
+        const state = {};
+        this.fieldList.forEach( key => {
+            state[ key ] = props[ key ];
+            state[ `${key}Error` ] = fieldErrors[ key ];
+        } );
+        this.state = state;
     }
 
     submit() {
@@ -36,7 +43,8 @@ export class ClientInfoEdit extends Component {
 
     fieldUpdate( fieldName, value ) {
         this.setState( {
-            [ fieldName ]: value
+            [ fieldName ]: value,
+            [ `${fieldName}Error` ]: false
         } );
     }
 
@@ -51,6 +59,7 @@ export class ClientInfoEdit extends Component {
                             <Field
                                 value={this.state.firstName}
                                 name={'firstName'}
+                                error={this.state.firstNameError}
                                 updateCallback={this.fieldUpdate}/>
                         </dd>
                         <dt>Last name:</dt>
@@ -58,6 +67,7 @@ export class ClientInfoEdit extends Component {
                             <Field
                                 value={this.state.lastName}
                                 name={'lastName'}
+                                error={this.state.lastNameError}
                                 updateCallback={this.fieldUpdate}/>
                         </dd>
                         <dt>Reg code:</dt>
@@ -65,6 +75,7 @@ export class ClientInfoEdit extends Component {
                             <Field
                                 value={this.state.regCode}
                                 name={'regCode'}
+                                error={this.state.regCodeError}
                                 updateCallback={this.fieldUpdate} />
                         </dd>
                     </dl>
@@ -74,6 +85,7 @@ export class ClientInfoEdit extends Component {
                             <Field
                                 value={this.state.phone}
                                 name={'phone'}
+                                error={this.state.phoneError}
                                 updateCallback={this.fieldUpdate}/>
                         </dd>
                         <dt>Address:</dt>
@@ -81,6 +93,7 @@ export class ClientInfoEdit extends Component {
                             <Field
                                 value={this.state.address}
                                 name={'address'}
+                                error={this.state.addressError}
                                 updateCallback={this.fieldUpdate}/>
                         </dd>
                         <dt>E-mail</dt>
@@ -88,6 +101,7 @@ export class ClientInfoEdit extends Component {
                             <Field
                                 value={this.state.email}
                                 name={'email'}
+                                error={this.state.emailError}
                                 updateCallback={this.fieldUpdate}/>
                         </dd>
                         <dt></dt>

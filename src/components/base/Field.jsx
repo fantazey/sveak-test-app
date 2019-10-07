@@ -24,12 +24,9 @@ export default class Field extends Component {
     }
 
     onChange( event ) {
-        this.setState( {
-            value: event.target.value
-        } );
         this.props.updateCallback(
             this.props.name,
-            this.state.value
+            event.target.value
         );
     }
 
