@@ -1,5 +1,7 @@
 const path = require( 'path' );
 const webpack = require( 'webpack' );
+const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
+const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 
 module.exports = {
     entry: './src/index.jsx',
@@ -39,5 +41,9 @@ module.exports = {
         publicPath: 'http://localhost:3000/dist/',
         hotOnly: true
     },
-    plugins: [ new webpack.HotModuleReplacementPlugin() ]
+    plugins: [
+        new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin(),
+        new webpack.HotModuleReplacementPlugin()
+    ]
 };
