@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RobotoBold';
+    src: url("./assets/fonts/Roboto-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Roboto';
+}
+
+.nav-link {
+    font-family: 'RobotoBold';
+}
