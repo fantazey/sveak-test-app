@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import ClientsPage from './containers/ClientsPage';
 import RegistrationPage from './containers/RegistrationPage';
