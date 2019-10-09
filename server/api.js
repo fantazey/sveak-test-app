@@ -58,6 +58,8 @@ function writeFile( json ) {
     fs.writeFileSync( dbFile, JSON.stringify( json ) );
 }
 
+const CLIENT_FIELDS = [ 'firstName', 'lastName', 'address', 'regCode', 'phone' ];
+
 router.use( function( req, res, next ) {
     req.db = readFile();
     next();

@@ -25,10 +25,10 @@ function fetchCommentsListFail( error ) {
 }
 export function fetchCommentsList( id, limit = 10, offset = 0 ) {
     return dispatch => {
-        return dispatch( fetchClient( id ) ).then( () => {
-            dispatch( fetchCommentsListPending() );
+        dispatch( fetchCommentsListPending() );
+        dispatch( fetchClient( id ) ).then( () => {
             const url = `${API_PATH}/clients/${id}/comments?limit=${limit}&offset=${offset}`;
-            makeRequest( url, {} ).then( res => {
+            return makeRequest( url, {} ).then( res => {
                 dispatch( fetchCommentsListSuccess( +id, res.comments ) );
             } ).catch( err => {
                 dispatch( fetchCommentsListFail( err ) );

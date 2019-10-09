@@ -1,8 +1,11 @@
+import moment from 'moment';
+import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     FETCH_COMMENTS_LIST_FAIL,
     FETCH_COMMENTS_LIST_PENDING,
     FETCH_COMMENTS_LIST_SUCCESS
 } from '../actions/comments';
+
 export const ADD_COMMENT = 'comments/ADD_COMMENT';
 export const EDIT_COMMENT = 'comments/EDIT_COMMENT';
 export const DELETE_COMMENT = 'comments/DELETE_COMMENT';
@@ -15,10 +18,10 @@ const initialState = {
 };
 
 function fetchCommentsListHandler( state, user, commentsList ) {
-    const allComments = state.comments.reject( x => x.user === user );
+    const allComments = state.comments.filter( x => x.user !== user );
     const comments = commentsList.map( x => ( {
         ...x,
-        createdAt: new Date( x.createdAt )
+        createdAt: moment( x.createdAt )
     } ) );
     return {
         ...state,
@@ -29,6 +32,7 @@ function fetchCommentsListHandler( state, user, commentsList ) {
 
 export default ( state = initialState, action ) => {
     switch ( action.type ) {
+    case LOCATION_CHANGE:
     case FETCH_COMMENTS_LIST_PENDING:
         return {
             ...state,

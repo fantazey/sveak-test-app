@@ -6,10 +6,7 @@ export default class CommentsRow extends Component {
     }
 
     get formatDate() {
-        const date = this.comment.createdAt;
-        const dateStr = `${date.getDate()}.${1 + date.getMonth()}.${date.getFullYear()}`;
-        const timeStr = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-        return `${dateStr} ${timeStr}`;
+        return this.comment.createdAt.format( 'DD MMM Y HH:mm' );
     }
 
     render() {
@@ -18,7 +15,7 @@ export default class CommentsRow extends Component {
                 {this.formatDate}
             </td>
             <td>
-                {this.props.comment.message}
+                {this.comment.comment}
             </td>
             <td>
 
