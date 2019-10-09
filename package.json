@@ -5,11 +5,11 @@
     "scripts": {
         "lint:app": "./node_modules/eslint/bin/eslint.js src",
         "lint:server": "./node_modules/eslint/bin/eslint.js server",
-        "start": "webpack-dev-server --mode development",
+        "start": "webpack-dev-server --config webpack.dev.js",
         "test": "jest",
         "test:watch": "npm test -- --watch",
-        "build:dev": "webpack --mode development",
-        "build:prod": "webpack --mode production"
+        "build:dev": "webpack --config webpack.dev.js",
+        "build:prod": "webpack --config webpack.prod.js"
     },
     "pre-commit": [
         "lint:app"
